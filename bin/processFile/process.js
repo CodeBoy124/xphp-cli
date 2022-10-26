@@ -6,8 +6,11 @@ const Translation = require('./translator');
 function processInlinePhp(input) {
     let output = "";
     for (let charIndex = 0; charIndex < input.length; charIndex++) {
-        if (charIndex + 1 >= input.length) continue;
         let currentChar = input[charIndex];
+        if (charIndex + 1 >= input.length) {
+            output += currentChar;
+            continue;
+        };
         let nextChar = input[charIndex + 1];
         if (currentChar + nextChar == "{{") {
             charIndex += 1;
@@ -28,7 +31,13 @@ let translations = [
     new Translation({ from: "foreach" }),
     new Translation({ from: "if" }),
     new Translation({ from: "elif", to: "}elseif" }),
+    new Translation({ from: "elseif", to: "}elseif" }),
     new Translation({ from: "}else" }),
+    new Translation({ from: "for" }),
+    new Translation({ from: "while" }),
+    new Translation({ from: "include", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
+    new Translation({ from: "require", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
+    new Translation({ from: "namespace", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true })
 ];
 
 // process xphp tags
