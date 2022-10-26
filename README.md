@@ -5,7 +5,7 @@ With xphp you can quickly make a foreach loop to show some data in a table while
 
 ## usage
 
-First you have to install the cli with npm using "npm i xphp-cli"
+First you have to install the cli with npm using "npm i --save-dev xphp-cli" (if you want it as a development dependency), "npm i -g xphp-cli" (for global installation) or just "npm i xphp-cli"
 
 Then to use this cli you also have to write a .xphp file.
 After that you can run 'xphp' in the root of your project and the cli will search for all files ending in .xphp in the directory and will create a .php file next to every .xphp file
