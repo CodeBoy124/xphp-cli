@@ -56,7 +56,7 @@ let translations = [
     new Translation({ from: "if" }),
     new Translation({ from: "elif", to: "}elseif" }),
     new Translation({ from: "elseif", to: "}elseif" }),
-    new Translation({ from: "}else" }),
+    new Translation({ from: "else", to: "}else" }),
     new Translation({ from: "for" }),
     new Translation({ from: "while" }),
     new Translation({ from: "include", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),

@@ -33,6 +33,27 @@ Besides @foreach and @end there are also some other tags. here is a list of all 
 -   @else
 -   @end
 
+### 1.1.0
+
+In version 1.1.0 most of the problems I noticed in the previous version (1.1.0) have been solved.
+You can now run {{ $item . "}}" }} without any problems.
+Also if you use a tag like @foreach inside of inline xphp it will now not replace it with <?php ... ?>
+Also in this version I introduced a lot of new tags
+
+-   @for
+-   @while
+-   @include / @require
+-   @namespace
+
+Please do keep in mind that for @include, @require and @namespace you still have to use parentheses.
+This can be best visualized inside this example:
+
+    @namespace(Something)
+    @include("otherfile")
+    ...some code
+
+You can now also use @elseif instead of @elif if you prefer
+
 ## current issues
 
 ### 1
