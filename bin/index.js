@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 // imports
 const search = require('./files/search');
 const processXphpFile = require('./processFile/process');
