@@ -37,20 +37,6 @@ Besides @foreach and @end there are also some other tags. here is a list of all 
 
 ### 1
 
-At the moment when you use inline xphp you can't use '}}'. to give you a better idea of this problem I wrote this example:
-
-    {{ $item . "}}" }}
-
-This will translate to
-
-    <?= $item . "?>" ?>
-
-Instead of
-
-    <?= $item . "}}" ?>
-
-### 2
-
 Because the tags and the inline xphp are handled seperatly the following example:
 
     {{ @foreach($items as $item) }}

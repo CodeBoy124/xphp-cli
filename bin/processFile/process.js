@@ -5,6 +5,12 @@ const Translation = require('./translator');
 // functions for {{ ... }} syntax
 function processInlinePhp(input) {
     let output = "";
+
+    let inString = false;
+    let stringType = "";
+
+    let inInlinePhp = false;
+
     for (let charIndex = 0; charIndex < input.length; charIndex++) {
         let currentChar = input[charIndex];
         if (charIndex + 1 >= input.length) {
@@ -12,18 +18,52 @@ function processInlinePhp(input) {
             continue;
         };
         let nextChar = input[charIndex + 1];
-        if (currentChar + nextChar == "{{") {
+        if (!inString && currentChar + nextChar == "{{") { // handle {{...}}
             charIndex += 1;
             output += "<?=";
-        } else if (currentChar + nextChar == "}}") {
+            inInlinePhp = true;
+        } else if (!inString && currentChar + nextChar == "}}") {
             charIndex += 1;
             output += "?>";
-        } else {
+            inInlinePhp = false;
+        } else if (inInlinePhp && !inString && currentChar == "\"") { // handle "..." strings
+            inString = true;
+            stringType = "\"";
+            output += currentChar;
+        } else if (inInlinePhp && inString && currentChar == "\"" && stringType != "'") {
+            inString = false;
+            stringType = "";
+            output += currentChar;
+        } else if (inInlinePhp && !inString && currentChar == "'") { // handle '...' strings
+            inString = true;
+            stringType = "'";
+            output += currentChar;
+        } else if (inInlinePhp && inString && currentChar == "'" && stringType != "\"") {
+            inString = false;
+            stringType = "";
+            output += currentChar;
+        } else { // add regular character if nothing else matches
             output += currentChar;
         }
     }
     return output;
 }
+/*
+
+} else if (!inString && currentChar == "\"") { // handle "..." strings
+    inString = true;
+    stringType = "\"";
+} else if (inString && currentChar == "\"" && stringType != "'") {
+    inString = false;
+    stringType = "";
+} else if (!inString && currentChar == "'") { // handle '...' strings
+    inString = true;
+    stringType = "'";
+} else if (inString && currentChar == "'" && stringType != "\"") {
+    inString = false;
+    stringType = "";
+}
+*/
 
 // xphp tag translations to regular php
 let translations = [
