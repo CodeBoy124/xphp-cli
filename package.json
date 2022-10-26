@@ -1,6 +1,6 @@
 {
     "name": "xphp-cli",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A cli to compile .xphp files wich are php files, but with some small syntax changes",
     "main": "./bin/index.js",
     "scripts": {
