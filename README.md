@@ -1,6 +1,6 @@
 # XPHP Command Line Tool
 
-Xphp stands for extended PHP (or extended hypertext preprocessor)
+Xphp stands for extended PHP (or extended hypertext preprocessor).
 With xphp you can quickly make a foreach loop to show some data in a table while still making the code very readable.
 
 ## usage
@@ -39,13 +39,13 @@ Besides @foreach and @end there are also some other tags. here is a list of all 
 
 Because the tags and the inline xphp are handled seperatly the following example:
 
-    {{ @foreach($items as $item) }}
     @foreach({{$items}} as $item)
 
 will output
 
-    <?= <?php foreach($items as $item){ ?> ?>
     <?php foreach(<?=$items?> as $item){ ?>
+
+Luckily this (usually) isn't a problem because most people don't use inline xphp inside of a tag.
 
 ## contributing
 

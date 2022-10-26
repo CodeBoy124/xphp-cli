@@ -48,22 +48,6 @@ function processInlinePhp(input) {
     }
     return output;
 }
-/*
-
-} else if (!inString && currentChar == "\"") { // handle "..." strings
-    inString = true;
-    stringType = "\"";
-} else if (inString && currentChar == "\"" && stringType != "'") {
-    inString = false;
-    stringType = "";
-} else if (!inString && currentChar == "'") { // handle '...' strings
-    inString = true;
-    stringType = "'";
-} else if (inString && currentChar == "'" && stringType != "\"") {
-    inString = false;
-    stringType = "";
-}
-*/
 
 // xphp tag translations to regular php
 let translations = [
@@ -80,10 +64,47 @@ let translations = [
     new Translation({ from: "namespace", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true })
 ];
 
+// functions for processing xphp tags
+function isInlinePhpOpening(charIndex, input) {
+    if (charIndex + 2 >= input.length) return false;
+    if (input[charIndex] + input[charIndex + 1] + input[charIndex + 2] == "<?=") {
+        return true;
+    }
+    return false;
+}
+function isInlinePhpClosing(charIndex, input) {
+    if (charIndex + 1 >= input.length) return false;
+    if (input[charIndex] + input[charIndex + 1] == "?>") {
+        return true;
+    }
+    return false;
+}
+
 // process xphp tags
 function processXphpTags(input) {
     let output = "";
+
+    let inInlinePhp = false;
+
     for (let charIndex = 0; charIndex < input.length; charIndex++) {
+        // detect if the current tag/character is inside of inline xphp
+        if (isInlinePhpOpening(charIndex, input)) {
+            inInlinePhp = true;
+            charIndex += 2;
+            output += "<?=";
+            continue;
+        } else if (isInlinePhpClosing(charIndex, input)) {
+            inInlinePhp = false;
+            charIndex += 1;
+            output += "?>";
+            continue;
+        }
+
+        if (inInlinePhp) { // if the tag is inside some inline xphp then it will not convert the tag, but keep it as is
+            output += input[charIndex];
+            continue;
+        }
+
         // check if any tag matches with the current (+upcomming) characters
         let matchedTag = null;
         for (let tag of translations) {
