@@ -32,7 +32,7 @@ function searchFolder(currentFolder) {
     let fileList = [];
     let filesAndDirectoriesInFolder = getFolderContent(currentFolder);
     for (let fileOrDirectory of filesAndDirectoriesInFolder) {
-        if (isDir(fileOrDirectory)) {
+        if (isDir(path.join(currentFolder, fileOrDirectory))) {
             // run function again in folder
             fileList = [
                 ...fileList,
