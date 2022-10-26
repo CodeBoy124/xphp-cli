@@ -1,0 +1,103 @@
+// imports
+const fs = require('fs');
+const Translation = require('./translator');
+
+// functions for {{ ... }} syntax
+function processInlinePhp(input) {
+    let output = "";
+    for (let charIndex = 0; charIndex < input.length; charIndex++) {
+        if (charIndex + 1 >= input.length) continue;
+        let currentChar = input[charIndex];
+        let nextChar = input[charIndex + 1];
+        if (currentChar + nextChar == "{{") {
+            charIndex += 1;
+            output += "<?=";
+        } else if (currentChar + nextChar == "}}") {
+            charIndex += 1;
+            output += "?>";
+        } else {
+            output += currentChar;
+        }
+    }
+    return output;
+}
+
+// xphp tag translations to regular php
+let translations = [
+    new Translation({ from: "end", to: "}", hasArguments: false, addOpenBracketAtEnd: false }),
+    new Translation({ from: "foreach" }),
+    new Translation({ from: "if" }),
+    new Translation({ from: "elif", to: "}elseif" }),
+    new Translation({ from: "}else" }),
+];
+
+// process xphp tags
+function processXphpTags(input) {
+    let output = "";
+    for (let charIndex = 0; charIndex < input.length; charIndex++) {
+        // check if any tag matches with the current (+upcomming) characters
+        let matchedTag = null;
+        for (let tag of translations) {
+            if (charIndex + tag.from.length > input.length) continue;
+            if (input.slice(charIndex, charIndex + tag.from.length) != tag.from) continue;
+            matchedTag = tag;
+            charIndex += tag.from.length - 1;
+            break;
+        }
+
+        // there is no tag that matched with the current index, so the character can be added to the output
+        if (matchedTag === null) {
+            let currentChar = input[charIndex];
+            output += currentChar;
+            continue;
+        }
+
+        // parse the arguments of the tag
+        let arguments = "";
+        if (charIndex + 1 < input.length && input[charIndex + 1] == "(") {
+            let parenthesisCount = 1;
+            charIndex += 2;
+
+            let inString = false;
+            let stringType = "";
+
+            while (charIndex < input.length && parenthesisCount > 0) {
+                let currentChar = input[charIndex];
+                if (!inString && currentChar == "(") { // handle new (...) groups made within the arguments
+                    parenthesisCount++;
+                } else if (!inString && currentChar == ")") {
+                    parenthesisCount--;
+                } else if (!inString && currentChar == "\"") { // handle "..." strings
+                    inString = true;
+                    stringType = "\"";
+                } else if (inString && currentChar == "\"" && stringType != "'") {
+                    inString = false;
+                    stringType = "";
+                } else if (!inString && currentChar == "'") { // handle '...' strings
+                    inString = true;
+                    stringType = "'";
+                } else if (inString && currentChar == "'" && stringType != "\"") {
+                    inString = false;
+                    stringType = "";
+                }
+
+                if (parenthesisCount > 0) { // exit loop if the arguments are closed
+                    arguments += currentChar;
+                    charIndex++;
+                }
+            }
+        }
+        // actually translate xphp tag to php tag
+        output += matchedTag.run(arguments);
+    }
+    return output;
+}
+
+// main function
+function process(fileName) {
+    let output = fs.readFileSync(fileName, 'utf8')
+    output = processInlinePhp(output);
+    output = processXphpTags(output);
+    return output;
+}
+module.exports = process;
