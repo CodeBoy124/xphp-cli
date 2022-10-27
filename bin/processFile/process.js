@@ -1,6 +1,9 @@
 // imports
 const fs = require('fs');
+const path = require('path');
+
 const Translation = require('./translator');
+const readJsonFile = require('../files/readJson');
 
 // functions for {{ ... }} syntax
 function processInlinePhp(input) {
@@ -48,21 +51,6 @@ function processInlinePhp(input) {
     }
     return output;
 }
-
-// xphp tag translations to regular php
-let translations = [
-    new Translation({ from: "end", to: "}", hasArguments: false, addOpenBracketAtEnd: false }),
-    new Translation({ from: "foreach" }),
-    new Translation({ from: "if" }),
-    new Translation({ from: "elif", to: "}elseif" }),
-    new Translation({ from: "elseif", to: "}elseif" }),
-    new Translation({ from: "else", to: "}else" }),
-    new Translation({ from: "for" }),
-    new Translation({ from: "while" }),
-    new Translation({ from: "include", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
-    new Translation({ from: "require", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
-    new Translation({ from: "namespace", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true })
-];
 
 // functions for processing xphp tags
 function isInlinePhpOpening(charIndex, input) {
@@ -163,11 +151,52 @@ function processXphpTags(input) {
     return output;
 }
 
+// xphp tag translations to regular php
+let translations = []
+function getDefaultTranslations() {
+    return [
+        new Translation({ from: "end", to: "}", hasArguments: false, addOpenBracketAtEnd: false }),
+        new Translation({ from: "foreach" }),
+        new Translation({ from: "if" }),
+        new Translation({ from: "elif", to: "}elseif" }),
+        new Translation({ from: "elseif", to: "}elseif" }),
+        new Translation({ from: "else", to: "}else" }),
+        new Translation({ from: "for" }),
+        new Translation({ from: "while" }),
+        new Translation({ from: "include", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
+        new Translation({ from: "require", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
+        new Translation({ from: "namespace", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true })
+    ];
+}
+function generateTranslationsFromJson(jsonObject) {
+    let output = [];
+    for (let tag of jsonObject) {
+        output.push(new Translation(tag));
+    }
+    return output;
+}
+function getTranslations(configuredTags) {
+    let output = [];
+    for (let tagGroup of configuredTags) {
+        if (tagGroup == "default") {
+            output = [...output, ...getDefaultTranslations()];
+        } else {
+            let fullTagGroupPath = path.join(process.cwd(), tagGroup);
+            let tagGroupJson = readJsonFile(fullTagGroupPath);
+            output = [...output, ...generateTranslationsFromJson(tagGroupJson)];
+        }
+    }
+    translations = output;
+}
+
 // main function
-function process(fileName) {
-    let output = fs.readFileSync(fileName, 'utf8')
-    output = processInlinePhp(output);
+function Process(fileName, config) {
+    let output = fs.readFileSync(fileName, 'utf8');
+    if (config.useInlineXphp) {
+        output = processInlinePhp(output);
+    }
+    getTranslations(config.tags);
     output = processXphpTags(output);
     return output;
 }
-module.exports = process;
+module.exports = Process;

@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 function readConfig(cwd) {
-    let fileContent = fs.readFileSync(path.join(cwd, "xphpconfig.json"), 'utf8');
+    let configFilePath = path.join(cwd, "xphpconfig.json");
+    let fileContent = '{"useInlineXphp": true, "tags": ["default"], "xphpFileExtension": ".xphp", "phpFileExtension": ".php"}';
+    if (fs.existsSync(configFilePath)) {
+        fileContent = fs.readFileSync(configFilePath, 'utf8');
+    }
     let contentAsJson = JSON.parse(fileContent);
     return contentAsJson;
 }

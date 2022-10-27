@@ -3,15 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 // file functions
-function getExtension(fileName) {
-    let fileParts = fileName.split(".");
-    if (fileParts.length == 1) return "";
-    let rawFileExtension = fileParts[fileParts.length - 1];
-    let formatedExtension = rawFileExtension.toLowerCase();
-    return formatedExtension;
-}
-function isXphpFile(fileName) {
-    return getExtension(fileName) == "xphp";
+function isXphpFile(fileName, xphpFileExtension) {
+    return fileName.endsWith(xphpFileExtension);
 }
 
 // directory function
@@ -28,7 +21,7 @@ function isDir(path) {
 }
 
 // main function
-function searchFolder(currentFolder) {
+function searchFolder(currentFolder, xphpFileEnding) {
     let fileList = [];
     let filesAndDirectoriesInFolder = getFolderContent(currentFolder);
     for (let fileOrDirectory of filesAndDirectoriesInFolder) {
@@ -38,7 +31,7 @@ function searchFolder(currentFolder) {
                 ...fileList,
                 ...searchFolder(path.join(currentFolder, fileOrDirectory))
             ];
-        } else if (isXphpFile(fileOrDirectory)) {
+        } else if (isXphpFile(fileOrDirectory, xphpFileEnding)) {
             let fullPath = path.join(currentFolder, fileOrDirectory);
             console.log(`found ${path.relative(process.cwd(), fullPath)}`);
             fileList = [

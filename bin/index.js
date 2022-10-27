@@ -6,6 +6,7 @@ const search = require('./files/search');
 const processXphpFile = require('./processFile/process');
 const writePhpFile = require('./files/write');
 const writeBasicXphpConfigFile = require('./config/write');
+const readConfigFile = require('./config/read');
 
 // get all arguments passed to cli
 function allToLowerCase(strArray) {
@@ -18,13 +19,16 @@ function allToLowerCase(strArray) {
 const arguments = allToLowerCase(process.argv.slice(2));
 
 if (arguments.length == 0) {
+    // load config file if there is any
+    let config = readConfigFile(process.cwd());
+
     // detect all files with .xphp extension and translate them to php
-    let xphpFiles = search(process.cwd());
+    let xphpFiles = search(process.cwd(), config.xphpFileExtension);
     let amountOfFilesReady = 0;
     for (xphpFile of xphpFiles) {
         console.log(`Processing file ${path.relative(process.cwd(), xphpFile)}`);
-        let translatedToRegularPhp = processXphpFile(xphpFile);
-        writePhpFile(xphpFile, translatedToRegularPhp);
+        let translatedToRegularPhp = processXphpFile(xphpFile, config);
+        writePhpFile(xphpFile, translatedToRegularPhp, config);
         amountOfFilesReady++;
         console.log(`Ready. ${amountOfFilesReady}/${xphpFiles.length} done.`);
     }
