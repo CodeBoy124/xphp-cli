@@ -39,9 +39,11 @@ function searchFolder(currentFolder) {
                 ...searchFolder(path.join(currentFolder, fileOrDirectory))
             ];
         } else if (isXphpFile(fileOrDirectory)) {
+            let fullPath = path.join(currentFolder, fileOrDirectory);
+            console.log(`found ${path.relative(process.cwd(), fullPath)}`);
             fileList = [
                 ...fileList,
-                path.join(currentFolder, fileOrDirectory)
+                fullPath
             ];
         }
     }
