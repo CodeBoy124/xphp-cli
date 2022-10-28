@@ -75,23 +75,23 @@ Besides stuff for file extensions you can now also disable the {{...}} syntax us
 And the last thing you can customize is what tags are used.
 By default the tags property contains "default" which means it uses the default tags.
 <s style="color:orange">You can now also create your own tags in a seperate file (ending in .json) and then import them by creating a new item in the tags property.
-That item would look something like "mytags.json" or "tags/mytags.json"
+That item would look something like "mytags.json" or "tags/mytags.json"</s>
 
-If you want to create your own tags you will have to now how they are structured.
+<s style="color:orange">If you want to create your own tags you will have to now how they are structured.
 You can understand the logic if you want to really know what everything does (the bin/processFile/translator.js contains the class which I use), but I'll also explain it right here.
 Every tags is alike this object: { from, to, hasArguments, addOpenBracketAtEnd, addSemicolonAtEnd, useParenthesesForArguments }
-Here is a list of what each property does
+Here is a list of what each property does</s>
 
--   from: the from property can be "foreach" for example. The program will automaticly add an @ symabal at the start, so you don't need to think of that
--   to: By default this is set to the from property, but if you have a tag which changes in php relative to the tag then you can use this property
--   hasArguments: This tells the program if it should add any arguments passed to the tag to the output. By default this is set to true
--   addOpenBracketAtEnd: A foreach loop in php looks like this: "foreach($items as $item) {"
+-   <s style="color:orange">from: the from property can be "foreach" for example. The program will automaticly add an @ symabal at the start, so you don't need to think of that</s>
+-   <s style="color:orange">to: By default this is set to the from property, but if you have a tag which changes in php relative to the tag then you can use this property</s>
+-   <s style="color:orange">hasArguments: This tells the program if it should add any arguments passed to the tag to the output. By default this is set to true</s>
+-   <s style="color:orange">addOpenBracketAtEnd: A foreach loop in php looks like this: "foreach($items as $item) {"
     It has an open bracket at the end.
-    Some tags don't need this, but by default this property is set to true
--   useParenthesesForArguments: Some php functions do not use parentheses for their arguments. An example of this would be 'echo' or 'namespace'. Therefor you can also disable this, but by default it is set to true
--   addSemicolonAtEnd: This tell the program if it should add a ; character at the end. This is usually done in single line functions and stuff alike, but for example a foreach loop has a { character at the end and a semicolon would not be wanted. By default this behaviour is set to false
+    Some tags don't need this, but by default this property is set to true</s>
+-   <s style="color:orange">useParenthesesForArguments: Some php functions do not use parentheses for their arguments. An example of this would be 'echo' or 'namespace'. Therefor you can also disable this, but by default it is set to true</s>
+-   <s style="color:orange">addSemicolonAtEnd: This tell the program if it should add a ; character at the end. This is usually done in single line functions and stuff alike, but for example a foreach loop has a { character at the end and a semicolon would not be wanted. By default this behaviour is set to false</s>
 
-The from property is like "foreach". The program will automaticly add a @ symbol at the start, so you don't need to think of that.
+<s style="color:orange">The from property is like "foreach". The program will automaticly add a @ symbol at the start, so you don't need to think of that.
 By default the to property is the same as the from property, the hasArguments property is set to true (this will add any arguments passed to the tag)</s>
 
 ### 1.1.2
