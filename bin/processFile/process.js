@@ -2,8 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const readJsonFile = require('../files/readJson');
-
 // functions for {{ ... }} syntax
 function processInlinePhp(input) {
     let output = "";
