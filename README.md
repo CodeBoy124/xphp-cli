@@ -94,7 +94,7 @@ Here is a list of what each property does</s>
 <s style="color:orange">The from property is like "foreach". The program will automaticly add a @ symbol at the start, so you don't need to think of that.
 By default the to property is the same as the from property, the hasArguments property is set to true (this will add any arguments passed to the tag)</s>
 
-### 1.1.2
+### 1.1.3
 
 In version 1.1.2 I have improved how tags are created (therefor also the orange text above).
 Now there are only two properties: from & to.
