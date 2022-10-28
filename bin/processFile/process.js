@@ -66,7 +66,7 @@ function isInlinePhpClosing(charIndex, input) {
 }
 
 // process xphp tags
-function processXphpTags(input) {
+function processXphpTags(input, fileInfo) {
     let output = "";
 
     let inInlinePhp = false;
@@ -143,7 +143,8 @@ function processXphpTags(input) {
             }
         }
         // actually translate xphp tag to php tag
-        output += matchedTag.to(arguments);
+        //
+        output += matchedTag.to(arguments, fileInfo);
     }
     return output;
 }
@@ -241,7 +242,7 @@ function Process(fileName, config) {
         output = processInlinePhp(output);
     }
     getTranslations(config.tags);
-    output = processXphpTags(output);
+    output = processXphpTags(output, { projectRoot: process.cwd(), rootToFile: path.relative(process.cwd(), fileName), rootToFolderOfFile: path.dirname(path.relative(process.cwd(), fileName)) });
     return output;
 }
 module.exports = Process;

@@ -29,7 +29,7 @@ function searchFolder(currentFolder, xphpFileEnding) {
             // run function again in folder
             fileList = [
                 ...fileList,
-                ...searchFolder(path.join(currentFolder, fileOrDirectory))
+                ...searchFolder(path.join(currentFolder, fileOrDirectory), xphpFileEnding)
             ];
         } else if (isXphpFile(fileOrDirectory, xphpFileEnding)) {
             let fullPath = path.join(currentFolder, fileOrDirectory);

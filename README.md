@@ -119,6 +119,22 @@ module.exports = [
 If you add "randomTag.js" to the tags property of the xphpconfig.json file (so "tags": ["default", "randomTag.js"]);
 And where to use @random(0, 10) in your xphp file, then it gets converted to <?= rand(0, 10) ?>
 
+### 1.1.3
+
+Custom components can now also get information of the position of the xphp file.
+To show how you can get this information I write this example:
+
+```javascript
+module.exports = [
+    {
+        from: "fileinfo",
+        to(args, {projectRoot, rootToFile, rootToFolderOfFile}){
+            return `<?php /*project root directory: ${projectRoot}; path to current file: ${rootToFile}; path to parent folder of file: ${rootToFolderOfFile}*/ ?>`;
+        }
+    }
+];
+```
+
 ## current issues
 
 ### 1
