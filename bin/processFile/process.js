@@ -2,7 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const Translation = require('./translator');
 const readJsonFile = require('../files/readJson');
 
 // functions for {{ ... }} syntax
@@ -96,10 +95,10 @@ function processXphpTags(input) {
         // check if any tag matches with the current (+upcomming) characters
         let matchedTag = null;
         for (let tag of translations) {
-            if (charIndex + tag.from.length > input.length) continue;
-            if (input.slice(charIndex, charIndex + tag.from.length) != tag.from) continue;
+            if (charIndex + ("@" + tag.from).length > input.length) continue;
+            if (input.slice(charIndex, charIndex + ("@" + tag.from).length) != ("@" + tag.from)) continue;
             matchedTag = tag;
-            charIndex += tag.from.length - 1;
+            charIndex += ("@" + tag.from).length - 1;
             break;
         }
 
@@ -146,7 +145,7 @@ function processXphpTags(input) {
             }
         }
         // actually translate xphp tag to php tag
-        output += matchedTag.run(arguments);
+        output += matchedTag.to(arguments);
     }
     return output;
 }
@@ -155,25 +154,73 @@ function processXphpTags(input) {
 let translations = []
 function getDefaultTranslations() {
     return [
-        new Translation({ from: "end", to: "}", hasArguments: false, addOpenBracketAtEnd: false }),
-        new Translation({ from: "foreach" }),
-        new Translation({ from: "if" }),
-        new Translation({ from: "elif", to: "}elseif" }),
-        new Translation({ from: "elseif", to: "}elseif" }),
-        new Translation({ from: "else", to: "}else" }),
-        new Translation({ from: "for" }),
-        new Translation({ from: "while" }),
-        new Translation({ from: "include", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
-        new Translation({ from: "require", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true }),
-        new Translation({ from: "namespace", useParenthesesForArguments: false, addOpenBracketAtEnd: false, addSemicolonAtEnd: true })
+        {
+            from: "end",
+            to() {
+                return `<?php } ?>`;
+            }
+        },
+        {
+            from: "foreach",
+            to(args) {
+                return `<?php foreach(${args}){ ?>`;
+            }
+        },
+        {
+            from: "if",
+            to(args) {
+                return `<?php if(${args}){ ?>`;
+            }
+        },
+        {
+            from: "elif",
+            to(args) {
+                return `<?php }elseif(${args}){ ?>`;
+            }
+        },
+        {
+            from: "elseif",
+            to(args) {
+                return `<?php }elseif(${args}){ ?>`;
+            }
+        },
+        {
+            from: "else",
+            to() {
+                return `<?php }else{ ?>`;
+            }
+        },
+        {
+            from: "for",
+            to(args) {
+                return `<?php for(${args}){ ?>`;
+            }
+        },
+        {
+            from: "while",
+            to(args) {
+                return `<?php while(${args}){ ?>`;
+            }
+        },
+        {
+            from: "include",
+            to(args) {
+                return `<?php include ${args}; ?>`;
+            }
+        },
+        {
+            from: "require",
+            to(args) {
+                return `<?php require ${args}; ?>`;
+            }
+        },
+        {
+            from: "namespace",
+            to(args) {
+                return `<?php namespace ${args}; ?>`;
+            }
+        }
     ];
-}
-function generateTranslationsFromJson(jsonObject) {
-    let output = [];
-    for (let tag of jsonObject) {
-        output.push(new Translation(tag));
-    }
-    return output;
 }
 function getTranslations(configuredTags) {
     let output = [];
@@ -182,8 +229,8 @@ function getTranslations(configuredTags) {
             output = [...output, ...getDefaultTranslations()];
         } else {
             let fullTagGroupPath = path.join(process.cwd(), tagGroup);
-            let tagGroupJson = readJsonFile(fullTagGroupPath);
-            output = [...output, ...generateTranslationsFromJson(tagGroupJson)];
+            let tagGroupImport = require(fullTagGroupPath);
+            output = [...output, ...tagGroupImport];
         }
     }
     translations = output;

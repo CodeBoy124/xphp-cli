@@ -74,7 +74,7 @@ Besides stuff for file extensions you can now also disable the {{...}} syntax us
 
 And the last thing you can customize is what tags are used.
 By default the tags property contains "default" which means it uses the default tags.
-You can now also create your own tags in a seperate file (ending in .json) and then import them by creating a new item in the tags property.
+<s style="color:orange">You can now also create your own tags in a seperate file (ending in .json) and then import them by creating a new item in the tags property.
 That item would look something like "mytags.json" or "tags/mytags.json"
 
 If you want to create your own tags you will have to now how they are structured.
@@ -92,7 +92,32 @@ Here is a list of what each property does
 -   addSemicolonAtEnd: This tell the program if it should add a ; character at the end. This is usually done in single line functions and stuff alike, but for example a foreach loop has a { character at the end and a semicolon would not be wanted. By default this behaviour is set to false
 
 The from property is like "foreach". The program will automaticly add a @ symbol at the start, so you don't need to think of that.
-By default the to property is the same as the from property, the hasArguments property is set to true (this will add any arguments passed to the tag)
+By default the to property is the same as the from property, the hasArguments property is set to true (this will add any arguments passed to the tag)</s>
+
+### 1.1.2
+
+In version 1.1.2 I have improved how tags are created (therefor also the orange text above).
+Now there are only two properties: from & to.
+The from property is a string which identifies what the tag looks like in xphp. The  @foreach tag for example uses "foreach" for the from property.
+The to property is a function which (optional) can take in the arguments found for the tag (as one large string).
+The to function must return the actual php code that is being used in the output file.
+Because the to property is a function you can no longer create the tags in a .json file, but you have to use a .js file.
+Let's have a look at an example of a not yet existing random tag.
+
+```javascript
+/* randomTag.js */
+module.exports = [
+    {
+        from: "random",
+        to(args){
+            return `<?= rand(${args}) ?>`;
+        }
+    }
+];
+```
+
+If you add "randomTag.js" to the tags property of the xphpconfig.json file (so "tags": ["default", "randomTag.js"]);
+And where to use @random(0, 10) in your xphp file, then it gets converted to <?= rand(0, 10) ?>
 
 ## current issues
 
