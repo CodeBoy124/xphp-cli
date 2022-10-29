@@ -43,10 +43,10 @@ if (arguments.length == 0) {
     // log all the supported commands
     console.log(`Welcome to the xphp cli.\nHere is a list of all supported commands and meanings:`);
     let dataToLog = {
-        "xphp": "searches for xphp files in the current working directory and all it's subfolders",
+        "xphp": "Searches for xphp files in the current working directory and all it's subfolders and converts them to php",
         "xphp version": "Shows the current version of the xphp cli",
         "xphp init": "Creates a basic xphpconfig.json file. This is optional, but if you want to customize the behaviour you can use that file",
-        "xphp help": "this"
+        "xphp help": "This"
     };
     for (let key in dataToLog) {
         let allKeys = Object.keys(dataToLog);
