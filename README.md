@@ -149,6 +149,10 @@ will output
 
 Luckily this (usually) isn't a problem because most people don't use inline xphp inside of a tag.
 
+## Best VSCode syntax highlighting (for now)
+
+There is no vscode extension for syntax highlighting xphp, but you can create a file association by clicking on the "Select Language Mode" button in the bottom. After that you can click "Configure File Association for '.xphp'..." and select "PHP". That way you get the same syntax highlighting you would have for a regular php file.
+
 ## contributing
 
 Thank you for considering contributing to this project.
