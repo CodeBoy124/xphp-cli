@@ -109,43 +109,42 @@ function processXphpTags(input, fileInfo) {
 
         // parse the arguments of the tag
         let arguments = "";
-        if (charIndex + 2 < input.length && input[charIndex + 1] == " " && input[charIndex + 2] == "(")
-            if ((charIndex + 1 < input.length && input[charIndex + 1] == "(") || (charIndex + 2 < input.length && input[charIndex + 1] == " " && input[charIndex + 2] == "(")) {
-                if (charIndex + 2 < input.length && input[charIndex + 1] == " " && input[charIndex + 2] == "(") {
+        if ((charIndex + 1 < input.length && input[charIndex + 1] == "(") || (charIndex + 2 < input.length && input[charIndex + 1] == " " && input[charIndex + 2] == "(")) {
+            if (charIndex + 2 < input.length && input[charIndex + 1] == " " && input[charIndex + 2] == "(") {
+                charIndex++;
+            }
+            let parenthesisCount = 1;
+            charIndex += 2;
+
+            let inString = false;
+            let stringType = "";
+
+            while (charIndex < input.length && parenthesisCount > 0) {
+                let currentChar = input[charIndex];
+                if (!inString && currentChar == "(") { // handle new (...) groups made within the arguments
+                    parenthesisCount++;
+                } else if (!inString && currentChar == ")") {
+                    parenthesisCount--;
+                } else if (!inString && currentChar == "\"") { // handle "..." strings
+                    inString = true;
+                    stringType = "\"";
+                } else if (inString && currentChar == "\"" && stringType != "'") {
+                    inString = false;
+                    stringType = "";
+                } else if (!inString && currentChar == "'") { // handle '...' strings
+                    inString = true;
+                    stringType = "'";
+                } else if (inString && currentChar == "'" && stringType != "\"") {
+                    inString = false;
+                    stringType = "";
+                }
+
+                if (parenthesisCount > 0) { // exit loop if the arguments are closed
+                    arguments += currentChar;
                     charIndex++;
                 }
-                let parenthesisCount = 1;
-                charIndex += 2;
-
-                let inString = false;
-                let stringType = "";
-
-                while (charIndex < input.length && parenthesisCount > 0) {
-                    let currentChar = input[charIndex];
-                    if (!inString && currentChar == "(") { // handle new (...) groups made within the arguments
-                        parenthesisCount++;
-                    } else if (!inString && currentChar == ")") {
-                        parenthesisCount--;
-                    } else if (!inString && currentChar == "\"") { // handle "..." strings
-                        inString = true;
-                        stringType = "\"";
-                    } else if (inString && currentChar == "\"" && stringType != "'") {
-                        inString = false;
-                        stringType = "";
-                    } else if (!inString && currentChar == "'") { // handle '...' strings
-                        inString = true;
-                        stringType = "'";
-                    } else if (inString && currentChar == "'" && stringType != "\"") {
-                        inString = false;
-                        stringType = "";
-                    }
-
-                    if (parenthesisCount > 0) { // exit loop if the arguments are closed
-                        arguments += currentChar;
-                        charIndex++;
-                    }
-                }
             }
+        }
         // actually translate xphp tag to php tag
         //
         output += matchedTag.to(arguments, fileInfo);
