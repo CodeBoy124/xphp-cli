@@ -135,6 +135,12 @@ module.exports = [
 ];
 ```
 
+### 1.1.7
+
+I recently discovered blade templates and altough this project is not going to be so big and focussed on 1 project I did try adding the @endforeach, @endif and so on.
+You can still use @end, but if you want @endforeach (and the others) are supported.
+Please keep in mind that not every directive from blade exists in xphp.
+
 ## current issues
 
 ### 1
@@ -151,7 +157,7 @@ Luckily this (usually) isn't a problem because most people don't use inline xphp
 
 ## Best VSCode syntax highlighting (for now)
 
-There is no vscode extension for syntax highlighting xphp, but you can create a file association by clicking on the "Select Language Mode" button in the bottom. After that you can click "Configure File Association for '.xphp'..." and select "PHP". That way you get the same syntax highlighting you would have for a regular php file.
+There is no vscode extension for syntax highlighting xphp, but you can create a file association by clicking on the "Select Language Mode" button in the bottom. After that you can click "Configure File Association for '.xphp'..." and select "blade" (if it does not show up you can search for vscode extensions that add syntax highlighting for blade templates). That way you get the (currently) best syntax hightlighting for xphp and you also have intelisense (altough you should keep in mind not every directive is supported in xphp)
 
 ## contributing
 
