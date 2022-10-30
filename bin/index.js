@@ -27,8 +27,9 @@ if (arguments.length == 0) {
     let amountOfFilesReady = 0;
     for (xphpFile of xphpFiles) {
         console.log(`Processing file ${path.relative(process.cwd(), xphpFile)}`);
-        let translatedToRegularPhp = processXphpFile(xphpFile, config);
         let fileRelativeToRoot = path.relative(path.join(process.cwd(), config.fromDir), xphpFile);
+        let outputFile = path.join(process.cwd(), config.toDir, fileRelativeToRoot);
+        let translatedToRegularPhp = processXphpFile(xphpFile, config, outputFile);
         writePhpFile(fileRelativeToRoot, translatedToRegularPhp, config, path.join(process.cwd(), config.toDir))
             .then(() => {
                 amountOfFilesReady++;

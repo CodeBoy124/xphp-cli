@@ -9,7 +9,6 @@ async function writeFile(filePath, data) {
     try {
         const dirname = path.dirname(filePath);
         const exist = isExists(dirname);
-        console.log(`${dirname}: ${exist}`);
         if (!exist) {
             fs.mkdirSync(dirname, { recursive: true });
         }

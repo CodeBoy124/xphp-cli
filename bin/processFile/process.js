@@ -263,13 +263,13 @@ function getTranslations(configuredTags) {
 }
 
 // main function
-function Process(fileName, config) {
+function Process(fileName, config, outputFile) {
     let output = fs.readFileSync(fileName, 'utf8');
     if (config.useInlineXphp) {
         output = processInlinePhp(output);
     }
     getTranslations(config.tags);
-    output = processXphpTags(output, { projectRoot: process.cwd(), rootToFile: path.relative(process.cwd(), fileName), rootToFolderOfFile: path.dirname(path.relative(process.cwd(), fileName)) });
+    output = processXphpTags(output, { projectRoot: process.cwd(), rootToFile: path.relative(process.cwd(), outputFile), rootToFolderOfFile: path.dirname(path.relative(process.cwd(), outputFile)) });
     return output;
 }
 module.exports = Process;
