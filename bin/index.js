@@ -23,14 +23,18 @@ if (arguments.length == 0) {
     let config = readConfigFile(process.cwd());
 
     // detect all files with .xphp extension and translate them to php
-    let xphpFiles = search(process.cwd(), config.xphpFileExtension);
+    let xphpFiles = search(path.join(process.cwd(), config.fromDir), config.xphpFileExtension);
     let amountOfFilesReady = 0;
     for (xphpFile of xphpFiles) {
         console.log(`Processing file ${path.relative(process.cwd(), xphpFile)}`);
         let translatedToRegularPhp = processXphpFile(xphpFile, config);
-        writePhpFile(xphpFile, translatedToRegularPhp, config);
-        amountOfFilesReady++;
-        console.log(`Ready. ${amountOfFilesReady}/${xphpFiles.length} done.`);
+        let fileRelativeToRoot = path.relative(path.join(process.cwd(), config.fromDir), xphpFile);
+        writePhpFile(fileRelativeToRoot, translatedToRegularPhp, config, path.join(process.cwd(), config.toDir))
+            .then(() => {
+                amountOfFilesReady++;
+                console.log(`Ready. ${amountOfFilesReady}/${xphpFiles.length} done.`);
+            })
+            .catch(console.log);
     }
 } else if (arguments.length == 1 && arguments[0] == "init") {
     writeBasicXphpConfigFile(process.cwd());

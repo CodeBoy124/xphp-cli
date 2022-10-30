@@ -141,19 +141,13 @@ I recently discovered blade templates and altough this project is not going to b
 You can still use @end, but if you want @endforeach (and the others) are supported.
 Please keep in mind that not every directive from blade exists in xphp.
 
-## current issues
+### 1.1.9
 
-### 1
+In this version you can now specify a directory to find all files and a directory to place all the output files.
+To specify an input directory you can use the 'fromDir' property in the config file and set it to a folder (relative to the root of your project).
+The same is true for the output directory, but you just have to use the 'toDir' property.
 
-Because the tags and the inline xphp are handled seperatly the following example:
-
-    @foreach({{$items}} as $item)
-
-will output
-
-    <?php foreach(<?=$items?> as $item){ ?>
-
-Luckily this (usually) isn't a problem because most people don't use inline xphp inside of a tag.
+<u>**IMPORTANT** if you update you xphp-cli version to 1.1.9 then you'll also have to add the new properties to the config file manually (only in already existing projects)</u>
 
 ## Best VSCode syntax highlighting (for now)
 

@@ -5,7 +5,9 @@ function writeBasicXphpConfigFile(rootFolder) {
         useInlineXphp: true,
         tags: ["default"],
         xphpFileExtension: ".xphp",
-        phpFileExtension: ".php"
+        phpFileExtension: ".php",
+        fromDir: ".",
+        toDir: "."
     };
     let basicConfigAsText = JSON.stringify(basicConfig, null, 2);
     console.log(basicConfigAsText);
